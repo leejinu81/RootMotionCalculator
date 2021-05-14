@@ -50,7 +50,7 @@ Vector3Nx RootMotionCalculator::CalcLerpPosition(int rootPosTime)
 
     for (auto index = 0; index < rootPositions_.size(); ++index)
     {
-        auto current = rootPositions_[index];
+        auto const& current = rootPositions_[index];
         if (rootPosTime <= current.timeMs_)
         {
             return CalcLerpPosition(GetPrevRootMotion(index), current, rootPosTime);
