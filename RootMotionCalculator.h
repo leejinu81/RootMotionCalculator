@@ -11,9 +11,9 @@ class RootMotionCalculator final
 {
 public:
     RootMotionCalculator(int layerIndex,
-                         const AnimationSimulatorModel &model,
-                         const IReadOnlyStartRootMotionArgs &args,
-                         const AnimationClipData &clipData,
+                         const AnimationSimulatorModel& model,
+                         const IReadOnlyStartRootMotionArgs& args,
+                         const AnimationClipData& clipData,
                          bool ignoreDeltaPos = false);
 
     void OnTick(int repeatMs, bool isTurningPoint);
@@ -25,13 +25,13 @@ private:
 
     RootPosition GetPrevRootMotion(int index);
 
-    static Vector3Nx CalcLerpPosition(const RootPosition &prev, const RootPosition &current, int rootPosTimeMs);
+    static Vector3Nx CalcLerpPosition(const RootPosition& prev, const RootPosition& current, int rootPosTimeMs);
 
     bool IsBetweenLastRootPositionAndAnimLength(int rootPosTimeMs, int lastRootPositionTimeMs) const;
 
-    Vector3Nx CalcDeltaPosition(bool isOverTurningPoint, const Vector3Nx &prev, const Vector3Nx &cur, bool isRewind);
+    Vector3Nx CalcDeltaPosition(bool isOverTurningPoint, const Vector3Nx& prev, const Vector3Nx& cur, bool isRewind);
 
-    Vector3Nx CalcDeltaPositionOverTurningPoint(const Vector3Nx &prev, const Vector3Nx &cur, bool isRewind) const;
+    Vector3Nx CalcDeltaPositionOverTurningPoint(const Vector3Nx& prev, const Vector3Nx& cur, bool isRewind) const;
 
     const int layerIndex_;
     AnimationSimulatorModel model_;

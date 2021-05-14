@@ -13,7 +13,7 @@ public:
     Vector3Nx deltaPosition;
     float animNormalizedTime;
 
-    const float &scaleMultiplier = scaleMultiplier_;
+    const float& scaleMultiplier = scaleMultiplier_;
 private:
     mutable std::map<int, float> speedMultipliers_{};
     float scaleMultiplier_{};
