@@ -1,6 +1,7 @@
 #include "AnimationSimulatorModel.h"
 
-float AnimationSimulatorModel::GetSpeedMultiplier(int layerIndex) const {
+float AnimationSimulatorModel::GetSpeedMultiplier(int layerIndex) const
+{
     auto[iter, success] = speedMultipliers_.insert({layerIndex, DefaultSpeedMultiplier});
     return success ? DefaultSpeedMultiplier : iter->second;
     // TODO 둘중 어느게 더 좋은가??

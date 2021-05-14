@@ -1,9 +1,9 @@
-#ifndef TESTCPP_ROOTPOSITION_H
-#define TESTCPP_ROOTPOSITION_H
+#pragma once
 
 #include "Vector3Nx.h"
 
-struct RootPosition final {
+struct RootPosition final
+{
     RootPosition();
 
     RootPosition(int timeMs, const Vector3Nx &pos);
@@ -13,5 +13,3 @@ struct RootPosition final {
     const int timeMs_{};
     const Vector3Nx pos_{};
 };
-
-#endif //TESTCPP_ROOTPOSITION_H

@@ -1,10 +1,9 @@
-
-#ifndef TESTCPP_IREADONLYSTARTROOTMOTIONARGS_H
-#define TESTCPP_IREADONLYSTARTROOTMOTIONARGS_H
+#pragma once
 
 #include "Vector3Nx.h"
 
-class IReadOnlyStartRootMotionArgs {
+class IReadOnlyStartRootMotionArgs
+{
 public:
     virtual int GetAnimNameHash() const = 0;
 
@@ -18,5 +17,3 @@ public:
 
     virtual float GetStartTimeRate() const = 0;
 };
-
-#endif //TESTCPP_IREADONLYSTARTROOTMOTIONARGS_H

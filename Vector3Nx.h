@@ -1,7 +1,7 @@
-#ifndef TESTCPP_VECTOR3NX_H
-#define TESTCPP_VECTOR3NX_H
+#pragma once
 
-class Vector3Nx final {
+class Vector3Nx final
+{
 public:
     explicit Vector3Nx();
 
@@ -30,5 +30,3 @@ private:
     float y_;
     float z_;
 };
-
-#endif //TESTCPP_VECTOR3NX_H

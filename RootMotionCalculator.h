@@ -1,5 +1,4 @@
-#ifndef TESTCPP_ROOTMOTIONCALCULATOR_H
-#define TESTCPP_ROOTMOTIONCALCULATOR_H
+#pragma once
 
 #include <vector>
 #include <algorithm>
@@ -8,7 +7,8 @@
 #include "IReadOnlyStartRootMotionArgs.h"
 #include "AnimationClipData.h"
 
-class RootMotionCalculator final {
+class RootMotionCalculator final
+{
 public:
     RootMotionCalculator(int layerIndex,
                          const AnimationSimulatorModel &model,
@@ -46,6 +46,3 @@ private:
 
     Vector3Nx prevPos_;
 };
-
-
-#endif //TESTCPP_ROOTMOTIONCALCULATOR_H
