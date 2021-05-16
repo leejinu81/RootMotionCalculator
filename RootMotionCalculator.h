@@ -2,23 +2,31 @@
 
 #include <vector>
 #include <algorithm>
-#include "AnimationSimulatorModel.h"
+#include <memory>
+#include <map>
 #include "RootPosition.h"
-#include "IReadOnlyStartRootMotionArgs.h"
+#include "StartRootMotionArgs.h"
 #include "AnimationClipData.h"
 
 class RootMotionCalculator final
 {
 public:
     RootMotionCalculator(int layerIndex,
-                         const AnimationSimulatorModel& model,
-                         const IReadOnlyStartRootMotionArgs& args,
+                         const StartRootMotionArgs& args,
                          const AnimationClipData& clipData,
                          bool ignoreDeltaPos = false);
 
-    void OnTick(int repeatMs, bool isTurningPoint);
+    std::tuple<Vector3Nx, float> OnTick(int repeatMs, bool isTurningPoint);
 
     void Stop();
+
+    void SetScaleMultiplier(float scale);
+
+    friend std::ostream& operator<<(std::ostream& os, const RootMotionCalculator& rootMotionCalculator);
+
+    constexpr static float DefaultSpeedMultiplier = 1.0f;
+
+    const float& scaleMultiplier = scaleMultiplier_;
 
 private:
     Vector3Nx CalcLerpPosition(int rootPosTime);
@@ -33,16 +41,18 @@ private:
 
     Vector3Nx CalcDeltaPositionOverTurningPoint(const Vector3Nx& prev, const Vector3Nx& cur, bool isRewind) const;
 
+    float GetSpeedMultiplierOrDefault(int layerIndex = 0);
+
     const int layerIndex_;
-    AnimationSimulatorModel model_;
-
-    // time, position
     const std::vector<RootPosition> rootPositions_;
-
     const bool bakeIntoPosY_;
     const Vector3Nx scale_;
     const int animLength_;
     const bool ignoreDeltaPos_;
 
     Vector3Nx prevPos_;
+    std::map<int, float> speedMultipliers_;
+    float scaleMultiplier_ = DefaultSpeedMultiplier;
+    Vector3Nx deltaPosition_;
+    float animNormalizedTime_;
 };

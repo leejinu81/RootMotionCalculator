@@ -1,11 +1,15 @@
 #pragma once
 
+#include <utility>
 #include <vector>
 #include "RootPosition.h"
 
-// struct field 네이밍 규칙이??
 struct AnimationClipData
 {
-    int animLengthMs{};
-    std::vector<RootPosition> rootPositions{};
+    AnimationClipData(const int animLengthMs, std::vector<RootPosition>  rootPositions)
+            : animLengthMs(animLengthMs), rootPositions(std::move(rootPositions))
+    {}
+
+    const int animLengthMs;
+    const std::vector<RootPosition> rootPositions;
 };

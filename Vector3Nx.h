@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 class Vector3Nx final
 {
 public:
@@ -15,15 +17,20 @@ public:
 
     Vector3Nx& operator=(const Vector3Nx& other);
 
+    friend std::ostream& operator<<(std::ostream& os, const Vector3Nx& vector3Nx);
+
     static Vector3Nx Scale(const Vector3Nx& left, const Vector3Nx& right);
 
     static Vector3Nx Lerp(const Vector3Nx& a, const Vector3Nx& b, float t);
 
     static const Vector3Nx zero;
     static const Vector3Nx one;
-    const float& x = x_;
-    const float& y = y_;
-    const float& z = z_;
+
+    float X() const;
+
+    float Y() const;
+
+    float Z() const;
 
 private:
     float x_;
