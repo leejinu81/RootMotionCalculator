@@ -12,43 +12,43 @@ class RootMotionCalculator final
 {
 public:
     RootMotionCalculator(int layerIndex,
-                         const StartRootMotionArgs& args,
-                         const AnimationClipData& clipData,
+                         StartRootMotionArgs const& args,
+                         AnimationClipData const& clipData,
                          bool ignoreDeltaPos = false);
 
     std::tuple<Vector3Nx, float> OnTick(int repeatMs, bool isTurningPoint);
 
     void Stop();
 
-    void SetScaleMultiplier(float scale);
-
-    friend std::ostream& operator<<(std::ostream& os, const RootMotionCalculator& rootMotionCalculator);
+    friend std::ostream& operator<<(std::ostream& os, RootMotionCalculator const& rootMotionCalculator);
 
     constexpr static float DefaultSpeedMultiplier = 1.0f;
 
-    const float& scaleMultiplier = scaleMultiplier_;
+    void SetScaleMultiplier(float scale);
+
+    float GetScaleMultiplier() const;
 
 private:
     Vector3Nx CalcLerpPosition(int rootPosTime);
 
-    RootPosition GetPrevRootMotion(int index);
+    RootPosition GetPrevRootMotion(int index) const;
 
-    static Vector3Nx CalcLerpPosition(const RootPosition& prev, const RootPosition& current, int rootPosTimeMs);
+    static Vector3Nx CalcLerpPosition(RootPosition const& prev, RootPosition const& current, int rootPosTimeMs);
 
     bool IsBetweenLastRootPositionAndAnimLength(int rootPosTimeMs, int lastRootPositionTimeMs) const;
 
-    Vector3Nx CalcDeltaPosition(bool isOverTurningPoint, const Vector3Nx& prev, const Vector3Nx& cur, bool isRewind);
+    Vector3Nx CalcDeltaPosition(bool isOverTurningPoint, Vector3Nx const& prev, Vector3Nx const& cur, bool isRewind);
 
-    Vector3Nx CalcDeltaPositionOverTurningPoint(const Vector3Nx& prev, const Vector3Nx& cur, bool isRewind) const;
+    Vector3Nx CalcDeltaPositionOverTurningPoint(Vector3Nx const& prev, Vector3Nx const& cur, bool isRewind) const;
 
     float GetSpeedMultiplierOrDefault(int layerIndex = 0);
 
-    const int layerIndex_;
-    const std::vector<RootPosition> rootPositions_;
-    const bool bakeIntoPosY_;
-    const Vector3Nx scale_;
-    const int animLength_;
-    const bool ignoreDeltaPos_;
+    int const layerIndex_;
+    std::vector<RootPosition> const rootPositions_;
+    bool const bakeIntoPosY_;
+    Vector3Nx const scale_;
+    int const animLength_;
+    bool const ignoreDeltaPos_;
 
     Vector3Nx prevPos_;
     std::map<int, float> speedMultipliers_;

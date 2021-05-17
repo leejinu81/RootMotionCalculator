@@ -4,17 +4,16 @@
 
 struct StartRootMotionArgs
 {
-    explicit StartRootMotionArgs(const int animNameHash, const Vector3Nx& lossyScale = Vector3Nx::one,
-                                 const float speed = 1.0f, const bool bakeIntoPosY = false, const bool loop = false,
-                                 const float startTimeRate = 0.0f)
+    explicit StartRootMotionArgs(int const animNameHash, Vector3Nx const& lossyScale = Vector3Nx::one,
+                                 float const speed = 1.0f, bool const bakeIntoPosY = false, bool const loop = false,
+                                 float const startTimeRate = 0.0f)
             : animNameHash(animNameHash), lossyScale(lossyScale), speed(speed),
-              bakeIntoPosY(bakeIntoPosY), loop(loop), startTimeRate(startTimeRate)
-    {}
+              bakeIntoPosY(bakeIntoPosY), loop(loop), startTimeRate(startTimeRate) {}
 
-    int animNameHash;
-    Vector3Nx lossyScale;
-    float speed;
-    bool bakeIntoPosY;
-    bool loop;
-    float startTimeRate;
+    int const animNameHash;
+    Vector3Nx const lossyScale;
+    float const speed;
+    bool const bakeIntoPosY;
+    bool const loop;
+    float const startTimeRate;
 };

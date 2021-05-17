@@ -9,22 +9,22 @@ public:
 
     explicit Vector3Nx(float x, float y, float z);
 
-    Vector3Nx operator+(const Vector3Nx& other) const;
+    Vector3Nx operator+(Vector3Nx const& other) const;
 
-    Vector3Nx operator-(const Vector3Nx& other) const;
+    Vector3Nx operator-(Vector3Nx const& other) const;
 
     Vector3Nx operator*(float d) const;
 
-    Vector3Nx& operator=(const Vector3Nx& other);
+    Vector3Nx& operator=(Vector3Nx const& other);
 
-    friend std::ostream& operator<<(std::ostream& os, const Vector3Nx& vector3Nx);
+    friend std::ostream& operator<<(std::ostream& os, Vector3Nx const& vector3Nx);
 
-    static Vector3Nx Scale(const Vector3Nx& left, const Vector3Nx& right);
+    static Vector3Nx Scale(Vector3Nx const& left, Vector3Nx const& right);
 
-    static Vector3Nx Lerp(const Vector3Nx& a, const Vector3Nx& b, float t);
+    static Vector3Nx Lerp(Vector3Nx const& a, Vector3Nx const& b, float t);
 
-    static const Vector3Nx zero;
-    static const Vector3Nx one;
+    static Vector3Nx const zero;
+    static Vector3Nx const one;
 
     float X() const;
 

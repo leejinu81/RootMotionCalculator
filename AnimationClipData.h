@@ -6,10 +6,9 @@
 
 struct AnimationClipData
 {
-    AnimationClipData(const int animLengthMs, std::vector<RootPosition>  rootPositions)
-            : animLengthMs(animLengthMs), rootPositions(std::move(rootPositions))
-    {}
+    AnimationClipData(int const animLengthMs, std::vector<RootPosition> rootPositions)
+            : animLengthMs(animLengthMs), rootPositions(std::move(rootPositions)) {}
 
-    const int animLengthMs;
-    const std::vector<RootPosition> rootPositions;
+    int const animLengthMs;
+    std::vector<RootPosition> const rootPositions;
 };

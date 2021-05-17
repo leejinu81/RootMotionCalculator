@@ -5,11 +5,10 @@
 struct RootPosition final
 {
     RootPosition(int timeMs, const Vector3Nx& pos)
-            : timeMs_(timeMs), pos_(pos)
-    {}
+            : timeMs_(timeMs), pos_(pos) {}
 
-    static const RootPosition EmptyRootPosition;
+    static RootPosition const EmptyRootPosition;
 
-    const int timeMs_;
-    const Vector3Nx pos_;
+    int const timeMs_;
+    Vector3Nx const pos_;
 };

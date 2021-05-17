@@ -1,3 +1,3 @@
 #include "RootPosition.h"
 
-const RootPosition RootPosition::EmptyRootPosition{0, Vector3Nx::zero};
+RootPosition const RootPosition::EmptyRootPosition(0, Vector3Nx::zero);

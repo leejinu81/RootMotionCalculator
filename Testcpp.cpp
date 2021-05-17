@@ -3,9 +3,13 @@
 
 int main()
 {
-    auto arg = StartRootMotionArgs(1);
-    auto animPos = std::vector<RootPosition>({RootPosition(0, Vector3Nx::zero), RootPosition(100, Vector3Nx(1, 0, 0))});
-    auto animationClipData = AnimationClipData(100, animPos);
+    auto const arg = StartRootMotionArgs(1);
+    auto const animPos = std::vector<RootPosition>(
+            {
+                    RootPosition(0, Vector3Nx::zero),
+                    RootPosition(100, Vector3Nx(1, 0, 0))
+            });
+    auto const animationClipData = AnimationClipData(100, animPos);
     auto rmc = RootMotionCalculator(0, arg, animationClipData);
 
     auto const[p, n] = rmc.OnTick(30, false);
