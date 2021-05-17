@@ -46,6 +46,15 @@ Vector3Nx& Vector3Nx::operator=(Vector3Nx const& other)
     return *this;
 }
 
+//Vector3Nx& Vector3Nx::operator=(Vector3Nx&& other) noexcept
+//{
+//    std::cout << "move" << std::endl;
+//    x_ = other.x_;
+//    y_ = other.y_;
+//    z_ = other.z_;
+//    return *this;
+//}
+
 std::ostream& operator<<(std::ostream& os, Vector3Nx const& vector3Nx)
 {
     os << "<" << vector3Nx.x_ << ", " << vector3Nx.y_ << ", " << vector3Nx.z_ << ">";

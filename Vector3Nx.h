@@ -17,6 +17,8 @@ public:
 
     Vector3Nx& operator=(Vector3Nx const& other);
 
+//    Vector3Nx& operator=(Vector3Nx&& other) noexcept;
+
     friend std::ostream& operator<<(std::ostream& os, Vector3Nx const& vector3Nx);
 
     static Vector3Nx Scale(Vector3Nx const& left, Vector3Nx const& right);
