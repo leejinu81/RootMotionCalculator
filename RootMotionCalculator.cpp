@@ -11,23 +11,23 @@ RootMotionCalculator::RootMotionCalculator(int layerIndex,
           scale_(args.lossyScale),
           ignoreDeltaPos_(ignoreDeltaPos)
 {
-    prevPos_ = !rootPositions_.empty() ? rootPositions_[0].pos_ : Vector3Nx();
+    prevPos_ = !rootPositions_.empty() ? rootPositions_[0].pos_ : Vector3();
 }
 
 // 매 틱 마다 부르기 때문에 최적화에 신경써야됨
-std::tuple<Vector3Nx, float> RootMotionCalculator::OnTick(int repeatMs, bool isTurningPoint)
+std::tuple<Vector3, float> RootMotionCalculator::OnTick(int repeatMs, bool isTurningPoint)
 {
     if (rootPositions_.empty())
-    { return std::make_tuple(Vector3Nx::zero, 0.0f); }
+    { return std::make_tuple(Vector3::zero, 0.0f); }
 
-    auto deltaPosition = Vector3Nx::zero;
+    auto deltaPosition = Vector3::zero;
     if (!ignoreDeltaPos_)
     {
         auto const newPos = CalcLerpPosition(repeatMs);
         auto const isRewind = GetSpeedMultiplierOrDefault(layerIndex_) < 0.0f;
         auto const deltaPos = CalcDeltaPosition(isTurningPoint, prevPos_, newPos, isRewind);
         auto const scale = scale_ * scaleMultiplier_;
-        deltaPosition = Vector3Nx::Scale(deltaPos, scale);
+        deltaPosition = Vector3::Scale(deltaPos, scale);
         prevPos_ = newPos;
     }
 
@@ -38,10 +38,10 @@ std::tuple<Vector3Nx, float> RootMotionCalculator::OnTick(int repeatMs, bool isT
     return std::make_tuple(deltaPosition, animNormalizedTime);
 }
 
-Vector3Nx RootMotionCalculator::CalcLerpPosition(int rootPosTime)
+Vector3 RootMotionCalculator::CalcLerpPosition(int rootPosTime)
 {
     if (rootPositions_.empty())
-    { return Vector3Nx::zero; }
+    { return Vector3::zero; }
 
     for (auto index = 0; index < rootPositions_.size(); ++index)
     {
@@ -59,7 +59,7 @@ Vector3Nx RootMotionCalculator::CalcLerpPosition(int rootPosTime)
         return lastRootPosition.pos_;
     }
 
-    return Vector3Nx::zero;
+    return Vector3::zero;
 }
 
 RootPosition RootMotionCalculator::GetPrevRootMotion(int index) const
@@ -67,7 +67,7 @@ RootPosition RootMotionCalculator::GetPrevRootMotion(int index) const
     return index == 0 ? RootPosition::EmptyRootPosition : rootPositions_[index - 1];
 }
 
-Vector3Nx RootMotionCalculator::CalcLerpPosition(RootPosition const& prev,
+Vector3 RootMotionCalculator::CalcLerpPosition(RootPosition const& prev,
                                                  RootPosition const& current,
                                                  int rootPosTimeMs)
 {
@@ -77,7 +77,7 @@ Vector3Nx RootMotionCalculator::CalcLerpPosition(RootPosition const& prev,
 
     auto const gap = rootPosTimeMs - prev.timeMs_;
     auto const timeRatio = static_cast<float>(static_cast<double>(gap) / maxLerp);
-    return Vector3Nx::Lerp(prev.pos_, current.pos_, timeRatio);
+    return Vector3::Lerp(prev.pos_, current.pos_, timeRatio);
 }
 
 bool RootMotionCalculator::IsBetweenLastRootPositionAndAnimLength(int rootPosTimeMs, int lastRootPositionTimeMs) const
@@ -85,17 +85,17 @@ bool RootMotionCalculator::IsBetweenLastRootPositionAndAnimLength(int rootPosTim
     return lastRootPositionTimeMs < rootPosTimeMs && rootPosTimeMs <= animLength_;
 }
 
-Vector3Nx RootMotionCalculator::CalcDeltaPosition(bool isOverTurningPoint, Vector3Nx const& prev, Vector3Nx const& cur,
+Vector3 RootMotionCalculator::CalcDeltaPosition(bool isOverTurningPoint, Vector3 const& prev, Vector3 const& cur,
                                                   bool isRewind)
 {
-    Vector3Nx const delta = isOverTurningPoint ?
+    Vector3 const delta = isOverTurningPoint ?
                             CalcDeltaPositionOverTurningPoint(prev, cur, isRewind) :
                             cur - prev;
 
-    return bakeIntoPosY_ ? Vector3Nx(delta.X(), 0, delta.Z()) : delta;
+    return bakeIntoPosY_ ? Vector3(delta.X(), 0, delta.Z()) : delta;
 }
 
-Vector3Nx RootMotionCalculator::CalcDeltaPositionOverTurningPoint(Vector3Nx const& prev, Vector3Nx const& cur,
+Vector3 RootMotionCalculator::CalcDeltaPositionOverTurningPoint(Vector3 const& prev, Vector3 const& cur,
                                                                   bool isRewind) const
 {
     // 넘어갔을때 마지막값 더하기
@@ -108,7 +108,7 @@ Vector3Nx RootMotionCalculator::CalcDeltaPositionOverTurningPoint(Vector3Nx cons
 
 void RootMotionCalculator::Stop()
 {
-    deltaPosition_ = Vector3Nx::zero;
+    deltaPosition_ = Vector3::zero;
 }
 
 float RootMotionCalculator::GetSpeedMultiplierOrDefault(int layerIndex)
