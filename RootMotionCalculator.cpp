@@ -1,17 +1,23 @@
 #include "RootMotionCalculator.h"
+#include <cassert>
 
 RootMotionCalculator::RootMotionCalculator(int layerIndex,
                                            StartRootMotionArgs const& args,
                                            AnimationClipData const& clipData,
                                            bool ignoreDeltaPos)
         : layerIndex_(layerIndex),
-          rootPositions_(clipData.rootPositions),
-          animLength_(clipData.animLengthMs),
           bakeIntoPosY_(args.bakeIntoPosY),
           scale_(args.lossyScale),
+          rootPositions_(clipData.rootPositions),
+          animLength_(clipData.animLengthMs),
           ignoreDeltaPos_(ignoreDeltaPos)
 {
-    prevPos_ = !rootPositions_.empty() ? rootPositions_[0].pos_ : Vector3();
+    prevPos_ = GetDefaultPrevPos();
+}
+
+Vector3 RootMotionCalculator::GetDefaultPrevPos()
+{
+    return rootPositions_.empty() ? Vector3::zero : rootPositions_[0].pos_;
 }
 
 // 매 틱 마다 부르기 때문에 최적화에 신경써야됨
@@ -34,7 +40,6 @@ std::tuple<Vector3, float> RootMotionCalculator::OnTick(int repeatMs, bool isTur
     auto const normalize = (float) repeatMs / (float) animLength_;
     auto const animNormalizedTime = std::clamp(normalize, 0.0f, 1.0f);
 
-    // deltaPosition 로컬변수라서 사라지지 않나??
     return std::make_tuple(deltaPosition, animNormalizedTime);
 }
 
@@ -54,7 +59,7 @@ Vector3 RootMotionCalculator::CalcLerpPosition(int rootPosTime)
 
     auto const lastRootPosition = rootPositions_[rootPositions_.size() - 1];
     // 마지막 RootMotion과 animLength 사이에 Tick이 들어오면
-    if (IsBetweenLastRootPositionAndAnimLength(rootPosTime, lastRootPosition.timeMs_))
+    if (IsBetweenLastRootPosAndAnimLength(rootPosTime, lastRootPosition.timeMs_))
     {
         return lastRootPosition.pos_;
     }
@@ -64,40 +69,42 @@ Vector3 RootMotionCalculator::CalcLerpPosition(int rootPosTime)
 
 RootPosition RootMotionCalculator::GetPrevRootMotion(int index) const
 {
+    assert(!rootPositions_.empty());
     return index == 0 ? RootPosition::EmptyRootPosition : rootPositions_[index - 1];
 }
 
 Vector3 RootMotionCalculator::CalcLerpPosition(RootPosition const& prev,
-                                                 RootPosition const& current,
-                                                 int rootPosTimeMs)
+                                               RootPosition const& current,
+                                               int rootPosTimeMs)
 {
     auto const maxLerp = current.timeMs_ - prev.timeMs_;
     if (maxLerp <= 0)
     { return prev.pos_; }
 
     auto const gap = rootPosTimeMs - prev.timeMs_;
-    auto const timeRatio = static_cast<float>(static_cast<double>(gap) / maxLerp);
+    auto const timeRatio = (float) gap / (float) maxLerp;
     return Vector3::Lerp(prev.pos_, current.pos_, timeRatio);
 }
 
-bool RootMotionCalculator::IsBetweenLastRootPositionAndAnimLength(int rootPosTimeMs, int lastRootPositionTimeMs) const
+bool RootMotionCalculator::IsBetweenLastRootPosAndAnimLength(int rootPosTimeMs, int lastRootPosTimeMs) const
 {
-    return lastRootPositionTimeMs < rootPosTimeMs && rootPosTimeMs <= animLength_;
+    return lastRootPosTimeMs < rootPosTimeMs && rootPosTimeMs <= animLength_;
 }
 
 Vector3 RootMotionCalculator::CalcDeltaPosition(bool isOverTurningPoint, Vector3 const& prev, Vector3 const& cur,
-                                                  bool isRewind)
+                                                bool isRewind)
 {
     Vector3 const delta = isOverTurningPoint ?
-                            CalcDeltaPositionOverTurningPoint(prev, cur, isRewind) :
-                            cur - prev;
+                          CalcDeltaPositionOverTurningPoint(prev, cur, isRewind) :
+                          cur - prev;
 
     return bakeIntoPosY_ ? Vector3(delta.X(), 0, delta.Z()) : delta;
 }
 
 Vector3 RootMotionCalculator::CalcDeltaPositionOverTurningPoint(Vector3 const& prev, Vector3 const& cur,
-                                                                  bool isRewind) const
+                                                                bool isRewind) const
 {
+    assert(!rootPositions_.empty());
     // 넘어갔을때 마지막값 더하기
     auto const endPrevPos = isRewind ? cur : prev;
     auto const endDelta = rootPositions_[rootPositions_.size() - 1].pos_ - endPrevPos;
@@ -106,39 +113,23 @@ Vector3 RootMotionCalculator::CalcDeltaPositionOverTurningPoint(Vector3 const& p
     return startPrevPos + endDelta;
 }
 
-void RootMotionCalculator::Stop()
-{
-    deltaPosition_ = Vector3::zero;
-}
-
 float RootMotionCalculator::GetSpeedMultiplierOrDefault(int layerIndex)
 {
     auto const[iter, success] = speedMultipliers_.insert({layerIndex, DefaultSpeedMultiplier});
     return success ? DefaultSpeedMultiplier : iter->second;
-    // TODO 둘중 어느게 더 좋은가??
-//        auto iter = speedMultipliers_.find(layerIndex);
-//        if (iter != speedMultipliers_.end()) {
-//            return iter->second;
-//        }
-//        speedMultipliers_.insert(layerIndex, DefaultSpeedMultiplier);
-//return DefaultSpeedMultiplier;
 }
-
 
 void RootMotionCalculator::SetScaleMultiplier(float scale)
 {
     scaleMultiplier_ = std::min(scale, 0.0f);
 }
 
-// For Debug
-std::ostream& operator<<(std::ostream& os, RootMotionCalculator const& rootMotionCalculator)
-{
-    os << "[Layer:" << rootMotionCalculator.layerIndex_ << "] [" << rootMotionCalculator.animNormalizedTime_ << "] "
-       << rootMotionCalculator.deltaPosition_;
-    return os;
-}
-
 float RootMotionCalculator::GetScaleMultiplier() const
 {
     return scaleMultiplier_;
+}
+
+void RootMotionCalculator::Stop()
+{
+    prevPos_ = GetDefaultPrevPos();
 }

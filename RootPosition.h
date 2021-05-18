@@ -5,7 +5,8 @@
 struct RootPosition final
 {
     RootPosition(int timeMs, Vector3 const& pos)
-            : timeMs_(timeMs), pos_(pos) {}
+            : timeMs_(timeMs), pos_(pos)
+    {}
 
     static RootPosition const EmptyRootPosition;
 

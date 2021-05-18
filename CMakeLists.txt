@@ -24,7 +24,7 @@ if (NOT googletest_POPULATED)
     include_directories(${gtest_SOURCE_DIR}/include ${gmock_SOURCE_DIR}/include)
 endif ()
 
-add_executable(Testcpp Main.cpp Vector3.cpp Vector3.h RootPosition.cpp RootPosition.h StartRootMotionArgs.h AnimationClipData.h RootMotionCalculator.cpp RootMotionCalculator.h RootMotionCalculatorTest.cc)
+add_executable(Testcpp Main.cpp Vector3.cpp Vector3.h RootPosition.cpp RootPosition.h StartRootMotionArgs.h AnimationClipData.h RootMotionCalculator.cpp RootMotionCalculator.h)
 
 #단위 테스트를 위해 libgtest, libgtest_main 라이브러리 링크
 target_link_libraries(Testcpp gtest gtest_main)

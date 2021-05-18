@@ -2,9 +2,11 @@
 #include <algorithm>
 #include <iostream>
 
-Vector3::Vector3() : x_(0), y_(0), z_(0) {}
+Vector3::Vector3() : x_(0), y_(0), z_(0)
+{}
 
-Vector3::Vector3(float x, float y, float z) : x_(x), y_(y), z_(z) {}
+Vector3::Vector3(float x, float y, float z) : x_(x), y_(y), z_(z)
+{}
 
 Vector3 const Vector3::zero{};
 
@@ -34,26 +36,9 @@ Vector3 Vector3::Lerp(Vector3 const& a, Vector3 const& b, float t)
 {
     auto clampT = std::clamp(t, 0.0f, 1.0f);
     return Vector3(a.x_ + ((b.x_ - a.x_) * clampT),
-                     a.y_ + ((b.y_ - a.y_) * clampT),
-                     a.z_ + ((b.z_ - a.z_) * clampT));
+                   a.y_ + ((b.y_ - a.y_) * clampT),
+                   a.z_ + ((b.z_ - a.z_) * clampT));
 }
-
-Vector3& Vector3::operator=(Vector3 const& other)
-{
-    x_ = other.x_;
-    y_ = other.y_;
-    z_ = other.z_;
-    return *this;
-}
-
-//Vector3& Vector3::operator=(Vector3&& other) noexcept
-//{
-//    std::cout << "move" << std::endl;
-//    x_ = other.x_;
-//    y_ = other.y_;
-//    z_ = other.z_;
-//    return *this;
-//}
 
 std::ostream& operator<<(std::ostream& os, Vector3 const& vector3Nx)
 {

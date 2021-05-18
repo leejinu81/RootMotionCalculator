@@ -8,7 +8,8 @@ struct StartRootMotionArgs
                                  float const speed = 1.0f, bool const bakeIntoPosY = false, bool const loop = false,
                                  float const startTimeRate = 0.0f)
             : animNameHash(animNameHash), lossyScale(lossyScale), speed(speed),
-              bakeIntoPosY(bakeIntoPosY), loop(loop), startTimeRate(startTimeRate) {}
+              bakeIntoPosY(bakeIntoPosY), loop(loop), startTimeRate(startTimeRate)
+    {}
 
     int const animNameHash;
     Vector3 const lossyScale;

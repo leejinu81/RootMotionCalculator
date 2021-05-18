@@ -18,24 +18,24 @@ public:
 
     std::tuple<Vector3, float> OnTick(int repeatMs, bool isTurningPoint);
 
-    void Stop();
-
-    friend std::ostream& operator<<(std::ostream& os, RootMotionCalculator const& rootMotionCalculator);
-
     constexpr static float DefaultSpeedMultiplier = 1.0f;
 
     void SetScaleMultiplier(float scale);
 
     float GetScaleMultiplier() const;
 
+    void Stop();
+
 private:
+    Vector3 GetDefaultPrevPos();
+
     Vector3 CalcLerpPosition(int rootPosTime);
 
     RootPosition GetPrevRootMotion(int index) const;
 
     static Vector3 CalcLerpPosition(RootPosition const& prev, RootPosition const& current, int rootPosTimeMs);
 
-    bool IsBetweenLastRootPositionAndAnimLength(int rootPosTimeMs, int lastRootPositionTimeMs) const;
+    bool IsBetweenLastRootPosAndAnimLength(int rootPosTimeMs, int lastRootPosTimeMs) const;
 
     Vector3 CalcDeltaPosition(bool isOverTurningPoint, Vector3 const& prev, Vector3 const& cur, bool isRewind);
 
@@ -44,15 +44,15 @@ private:
     float GetSpeedMultiplierOrDefault(int layerIndex = 0);
 
     int const layerIndex_;
-    std::vector<RootPosition> const rootPositions_;
+    // StartRootMotionArgs
     bool const bakeIntoPosY_;
     Vector3 const scale_;
-    int const animLength_;
     bool const ignoreDeltaPos_;
+    // AnimationClipData
+    int const animLength_;
+    std::vector<RootPosition> const rootPositions_;
 
     Vector3 prevPos_;
     std::map<int, float> speedMultipliers_;
     float scaleMultiplier_ = DefaultSpeedMultiplier;
-    Vector3 deltaPosition_;
-    float animNormalizedTime_;
 };

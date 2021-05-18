@@ -15,9 +15,6 @@ public:
 
     Vector3 operator*(float d) const;
 
-    Vector3& operator=(Vector3 const& other);
-
-//    Vector3& operator=(Vector3&& other) noexcept;
     bool operator==(Vector3 const& other) const;
 
     friend std::ostream& operator<<(std::ostream& os, Vector3 const& vector3Nx);

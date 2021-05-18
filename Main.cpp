@@ -2,6 +2,7 @@
 #include "gtest/gtest.h"
 #include "RootMotionCalculator.h"
 
+// max 파일에서 추출된 RootPosition을 저장한다
 auto const kAnimPos = std::vector<RootPosition>(
         {
                 RootPosition(0, Vector3::zero),
@@ -10,12 +11,12 @@ auto const kAnimPos = std::vector<RootPosition>(
                 RootPosition(600, Vector3(0, 3, 3)),
                 RootPosition(700, Vector3(0, 0, 5)),
         });
+auto const kAnimationClipData = AnimationClipData(1000, kAnimPos);
 
 TEST(Test, BakeIntoPosY가_True이면_DeltaPosition의_Y가_0이다)
 {
     auto const arg = StartRootMotionArgs(1, Vector3::one, 1.0f, true);
-    auto const animationClipData = AnimationClipData(1000, kAnimPos);
-    auto rmc = RootMotionCalculator(0, arg, animationClipData);
+    auto rmc = RootMotionCalculator(0, arg, kAnimationClipData);
 
     auto const[pos, nor] = rmc.OnTick(200, false);
     EXPECT_EQ(pos, Vector3(0, 0, 1));
@@ -27,8 +28,7 @@ TEST(Test, BakeIntoPosY가_True이면_DeltaPosition의_Y가_0이다)
 TEST(Test, TestDeltaPosition)
 {
     auto const arg = StartRootMotionArgs(1);
-    auto const animationClipData = AnimationClipData(1000, kAnimPos);
-    auto rmc = RootMotionCalculator(0, arg, animationClipData);
+    auto rmc = RootMotionCalculator(0, arg, kAnimationClipData);
 
     auto const[pos, nor] = rmc.OnTick(200, false);
     EXPECT_EQ(pos, Vector3(0, 1, 1));
@@ -41,8 +41,7 @@ TEST(Test, TestDeltaPosition)
 TEST(Test, TurningPoint지나가는_DeltaTime이면_마지막지점과_더해서_DeltaPosition이_나온다)
 {
     auto const arg = StartRootMotionArgs(1, Vector3::one, 1.0f, true);
-    auto const animationClipData = AnimationClipData(1000, kAnimPos);
-    auto rmc = RootMotionCalculator(0, arg, animationClipData);
+    auto rmc = RootMotionCalculator(0, arg, kAnimationClipData);
 
     auto const[pos, nor] = rmc.OnTick(100, true);
     // Vector3(0,0,0.5f) + Vector3(0,0,5)
@@ -51,6 +50,19 @@ TEST(Test, TurningPoint지나가는_DeltaTime이면_마지막지점과_더해서
     auto const[pos2, nor2] = rmc.OnTick(300, true);
     // Vector3(0,0,5) - Vector3(0,0, 0.5f) + Vector3(0,0,1.5f)
     EXPECT_EQ(pos2, Vector3(0, 0, 6));
+}
+
+TEST(Test, Stop)
+{
+    auto const arg = StartRootMotionArgs(1);
+    auto rmc = RootMotionCalculator(0, arg, kAnimationClipData);
+
+    auto const[pos, nor] = rmc.OnTick(200, false);
+    EXPECT_EQ(pos, Vector3(0, 1, 1));
+    rmc.Stop();
+
+    auto const[pos2, nor2] = rmc.OnTick(200, false);
+    EXPECT_EQ(pos2, Vector3(0, 1, 1));
 }
 
 int main(int argc, char **argv)
